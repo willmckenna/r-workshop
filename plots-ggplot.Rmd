@@ -49,5 +49,6 @@ gg_np +
   labs(x = "year", y = "annual visitors") +
   facet_wrap(~ park_name)
 
+ggsave(here("figures", "np_graph.jpg"), dpi = 180, width = 8, height = 7)
 ```
 

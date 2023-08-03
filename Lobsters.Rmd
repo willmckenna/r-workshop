@@ -1,0 +1,63 @@
+---
+title: "Lobsters"
+author: "Will Mckenna"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+## attach libraries
+library(tidyverse)
+library(readxl)
+library(here)
+library(skimr) # install.packages('skimr')
+library(kableExtra) #install.packages('kabelExtra')
+
+## read in data
+
+lobsters <- read_xlsx(here("data/lobsters.xlsx"), skip=4)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r explore, include = FALSE}
+skimr::skim(lobsters)
+
+siteyear_summary <- lobsters %>% group_by(site, year) %>% summarize(count_by_siteyear = n(),
+                                                mean_size_mm = mean(size_mm, na.rm = TRUE),
+                                                median_size_mm = median(size_mm, na.rm = TRUE),
+                                                sd_size_mm = sd(size_mm, na.rm = TRUE))
+
+```
+
+## Included Summary Table
+
+
+```{r pressure, echo=FALSE}
+siteyear_summary %>% 
+  kable()
+
+## GG plot option
+
+ggplot(data = siteyear_summary, aes(x = year, y = median_size_mm, color = site)) + geom_line()
+ggsave(here("figures", "lobsters-line.png"))
+
+```
+```{r}
+
+## another plot option
+
+ggplot(siteyear_summary, aes(x = year, y= median_size_mm)) + geom_col() + facet_wrap(~site)
+ggsave(here("figures", "lobsters-facet-site.png"))
+
+```
+
+## Summary 
+
+There are `r nrow(lobsters)` total lobsters included in this report.
