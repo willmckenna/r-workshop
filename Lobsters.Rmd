@@ -18,6 +18,15 @@ library(kableExtra) #install.packages('kabelExtra')
 ## read in data
 
 lobsters <- read_xlsx(here("data/lobsters2.xlsx"), skip=4)
+
+# mutate the data
+
+lobsters <- lobsters %>%  mutate(size_m = size_mm / 1000)
+
+lobsters_detailed <- lobsters_detailed <- lobsters %>% mutate(millenia = 2000,observer = "Test Data")
+
+lobsters_detailed %>% select(date, site, size_m)
+
 ```
 
 ## R Markdown
