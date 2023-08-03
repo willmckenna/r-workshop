@@ -30,7 +30,24 @@ gg_base + geom_col()
 ```
 ```{r, include = FALSE}
 
-gg_base + geom_col(aes(fill = visitors))
+gg_base + geom_col(aes(fill = visitors)) + theme_minimal() + labs(
+  x = "Year",
+  y = "Annual Park Visitors",
+  title = "Channel Islands NP Visitation",
+  subtitle = "(1963 - 2016)"
+)
+
+```
+```{r multi-series, include = FALSE}
+gg_np <- ggplot(data = ca_np, aes(x=year, y = visitors, group = park_name)) + geom_line()
+
+##split up the graph into multiple panels
+
+gg_np + 
+  geom_line(show.legend = FALSE) + 
+  theme_light() +
+  labs(x = "year", y = "annual visitors") +
+  facet_wrap(~ park_name)
 
 ```
 
