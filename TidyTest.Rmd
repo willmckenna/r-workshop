@@ -1,0 +1,46 @@
+---
+title: "tidyTest"
+author: "Will Mckenna"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(dplyr)
+library(tidyverse)
+library(janitor)
+library(here)
+library(readxl)
+
+inverts <- read_excel(here("data", "inverts.xlsx"))
+names(inverts)
+summary(inverts)
+
+inverts_long <- tidyr::pivot_longer(data = inverts,
+                    cols = '2016':'2018',
+                    names_to = "year",
+                    values_to = "sp_count")
+
+##coerce year class to numeric
+
+inverts_long <- inverts_long %>%
+  mutate(year = as.numeric(year))
+
+## transform data - create columns for common_name
+
+inverts_wide <- inverts_long %>%
+  pivot_wider(names_from = common_name, 
+              values_from = sp_count)
+
+## clean up column names
+
+inverts_wide <- inverts_wide %>% 
+  clean_names()
+
+inverts_unite <- inverts_long %>%
+  unite(col = "site_year", 
+        c(site, year),
+        sep = "_")
+```
+

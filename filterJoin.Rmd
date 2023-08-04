@@ -1,0 +1,47 @@
+---
+title: "filterJoin"
+author: "Will Mckenna"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(tidyverse)
+library(readxl)
+library(here) 
+library(kableExtra)
+
+fish <- read_csv(here("data", "fish.csv"))
+kelp_abur <- read_excel(here("data", "kelp.xlsx"), sheet = "abur")
+
+```
+
+```{r analyze}
+
+fish_garibaldi <- fish %>%
+  filter(common_name == "garibaldi")
+
+fish_mohk <- fish %>%
+  filter(site == "mohk")
+
+fish_3sp <- fish %>%
+  filter(common_name == "garibaldi" |
+  common_name == "blacksmith" |
+    common_name == "black surfperch")
+
+fish_gar_2016 <- fish %>% 
+  filter(year == 2016 | common_name == "garibaldi")
+
+aque_2018 <- fish %>%
+  filter(year == 2018, site == "aque")
+
+low_gb_wr <- fish %>%
+  filter(common_name %in% c("garibaldi", "rock wrasse"), total_count <= 10 )
+
+fish_it <- fish %>%
+  filter(str_detect(common_name,patter = "it"))
+
+```
+
