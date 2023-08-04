@@ -18,7 +18,7 @@ kelp_abur <- read_excel(here("data", "kelp.xlsx"), sheet = "abur")
 
 ```
 
-```{r analyze}
+```{r analyze, echo= FALSE}
 
 fish_garibaldi <- fish %>%
   filter(common_name == "garibaldi")
@@ -43,5 +43,28 @@ low_gb_wr <- fish %>%
 fish_it <- fish %>%
   filter(str_detect(common_name,patter = "it"))
 
+
+abur_kelp_fish <- kelp_abur %>% 
+  full_join(fish, by = c("year", "site")) 
+
+kelp_fish_left <- left_join(fish, kelp_abur, by = "year")
+
+final <- fish %>% 
+  filter(year == 2017, site == "abur") %>% 
+  left_join(kelp_abur, by = c("year", "site")) %>%
+  mutate(fish_per_frond = total_count / total_fronds)
+
 ```
+
+## Tables
+
+```{r, echo= FALSE}
+final %>%
+  kable() %>%
+  kable_styling(bootstrap_options = "striped",
+                full_width = FALSE)
+
+```
+
+
 
